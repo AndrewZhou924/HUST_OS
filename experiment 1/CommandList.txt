@@ -1,0 +1,3 @@
+last date:20190325
+C:\Program Files (x86)\Tencent\TIM\Bin\QQScLauncher.exe
+D:\Microsoft VS Code\Code.exe
