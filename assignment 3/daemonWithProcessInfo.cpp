@@ -12,6 +12,12 @@
 #include <string>
 #include <sstream>
 
+/*
+    操作系统原理 课后作业3
+    数媒1701 周展科
+    U201717132
+*/
+
 using namespace std;
 
 #define ERR_EXIT(m) \
@@ -24,11 +30,11 @@ while (0);\
 
 typedef struct{
     pid_t pid;
-    char name[256];//进程名称
-    char user[256];//进程名称
+    char name[256]; //进程名称
+    char user[256]; //进程名称
     char endTimebuff[1024];
     char startTimebuff[1024];
-}proc_info_st;//保存读取的进程信息
+}proc_info_st;      //保存读取的进程信息
 
 #define PROC_NAME_LINE 1//名称所在行
 #define PROC_PID_LINE 4//pid所在行
@@ -49,10 +55,7 @@ void getStartTime(int pid, char startTimebuff[]);
 void getUser(int pid, char userBuff[]);
 void creat_daemon(void);
 
-
-
-int main(void)
-{
+int main(void) {
     time_t t;
     int fd;
     creat_daemon();
@@ -64,45 +67,39 @@ int main(void)
         char *buf = asctime(localtime(&t));
         write(fd,buf,strlen(buf));
 
-            //打开目录
+        //打开目录
         DIR *dir;
         struct dirent *ptr;
         if (!(dir = opendir("/proc")))
             return 0;
-     //读取目录
-        while (ptr = readdir(dir)) {//循环读取出所有的进程文件
+        //读取目录
+        while (ptr = readdir(dir)) {    //循环读取出所有的进程文件
     
         if (ptr->d_name[0] > '0' && ptr->d_name[0] <= '9') {
             //获取进程信息
             proc_info_st info;
             read_proc(&info,ptr->d_name);//读取信息
-            // printf("pid:%d\npname:%s\nlastTime: %s\nStartTime: %s\nUser:%s\n",info.pid,info.name,info.endTimebuff,info.startTimebuff,info.user);
 
+            //构造每个进程的信息字符串
             stringstream ss;
             ss << "pid:";
             char pid_str[25];
             sprintf(pid_str, "%d", info.pid);
             ss << pid_str;
-
             ss << " ---user:";
             ss << info.user;
-
             ss << " ---process name:";
             ss << info.name;
-
             ss << " ---start time:";
             ss << info.startTimebuff;
-
             ss << " ---last time:";
             ss << info.endTimebuff;
             ss << "\n";
 
-            // printf("%s",ss.str().c_str());
+            //将进程信息写入文件daemon.log中
             write(fd,ss.str().c_str(),strlen(ss.str().c_str()));
             }
         }
-
-
 
         close(fd);
         sleep(60);
@@ -112,8 +109,7 @@ int main(void)
 }
 
 
-void creat_daemon(void)
-{
+void creat_daemon(void) {
     pid_t pid;
     pid = fork();
     if( pid == -1)
@@ -135,21 +131,12 @@ void creat_daemon(void)
     return;
 }
 
-/**************************************************
- **说明:根据进程pid获取进程信息,存放在proc_info_st结构体中
- **
- **输入:
- **        /proc_info_st* info  返回进程信息
- **        /char* c_pid  进程pid的字符串形式
- **
- **
- **
- *************************************************/
+// 根据进程pid获取进程信息,存放在proc_info_st结构体中
 void read_proc(proc_info_st* info,const char* c_pid)
 {
     FILE* fp = NULL;
     char file[512] = {0};
-    char line_buff[BUFF_LEN] = {0};//读取行的缓冲区
+    char line_buff[BUFF_LEN] = {0};       //读取行的缓冲区
     
     sprintf(file,"/proc/%s/status",c_pid);//读取status文件
     if (!(fp = fopen(file,"r")))
@@ -187,23 +174,9 @@ void read_proc(proc_info_st* info,const char* c_pid)
     getUser((int)(info->pid),userBuff);
     strcpy(info->user,userBuff);
     
-    
 }
 
-
-/**************************************************
- **说明:读取文件的一行到buff
- **
- **输入:
- **     /FILE* fp  文件指针
- **        /char* buff  缓冲区
- **     /int b_l  缓冲区的长度
- **        /l  指定行
- **
- **输出:
- **     /true 读取成功
- **     /false 读取失败
- *************************************************/
+// 读取文件的一行到buff
 int read_line(FILE* fp,char* buff,int b_l,int l)
 {
     if (!fp)

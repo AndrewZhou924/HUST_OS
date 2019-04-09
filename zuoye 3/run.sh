@@ -1,1 +1,0 @@
-echo "737699" | sudo -S ./a.out

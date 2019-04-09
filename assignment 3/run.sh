@@ -1,0 +1,1 @@
+echo "myUbuntuPassword" | sudo -S ./a.out
