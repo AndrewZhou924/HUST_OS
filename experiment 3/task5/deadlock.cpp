@@ -40,7 +40,7 @@ unsigned int __stdcall philosopher(void *pM)
 		eating(i);
 		put_forks(i);
 	}
-	printf("                  哲学家[%d]线程结束\n", i);
+	printf("                  哲学家%d线程结束\n", i);
 	return 0;
 }
 
