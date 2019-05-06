@@ -9,10 +9,8 @@
 #define FALSE -1
 
 int mem_frame[MAX_MEM_SIZE];        //内存帧 
-
 int instruction[MAX_VIR_SIZE * 10];   //指令序列 
 int reference[MAX_VIR_SIZE * 10];     //引用串 
-
 int mem_size[MEM_NO] = { 4, 18, 32 }; //内存容量 
 int vir_size[VIR_NO] = { 32, 64 };    //虚存容量 
 
